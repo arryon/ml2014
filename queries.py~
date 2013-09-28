@@ -11,13 +11,10 @@ from matplotlib import pyplot as plt
 from data.models import Instance, find_tag
 import numpy as np
 
-#http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans
-from sklearn.cluster import KMeans
 
-kmeans = KMeans(8)
-KMeans.fit(X[,y])
-KMeans.predict()
 
+for s in Instance.objects.sequence:
+    print s
 data = Instance.objects.filter(person='A', sequence=1, activity='standing up from lying', tag=find_tag('ankle left'))
 data2 = Instance.objects.filter(person='A', sequence=2, activity='standing up from lying', tag='020-000-032-221')
 
