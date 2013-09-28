@@ -2,7 +2,7 @@ import sys
 import csv
 import datetime
 
-sys.path.append('/home/arryon/repos/machinelearning')
+import matplotlib.pyplot as plt
 
 from django.core.management import setup_environ
 from machinelearning import settings
@@ -10,6 +10,13 @@ setup_environ(settings)
 
 from data.models import Instance, find_tag
 
-person1 = Instance.objects.filter(person='A')
+data = Instance.objects.filter(person='A', sequence=1, tag=find_tag('ankle left'),activity='walking').order_by('datetime')
 
-print "A has {0} data points".format(len(person1))
+x = [d.x for d in data]
+y = [d.y for d in data]
+z = [d.z for d in data]
+
+plt.plot(x)
+plt.plot(y)
+plt.plot(z)
+plt.show()
