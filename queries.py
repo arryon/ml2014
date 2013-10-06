@@ -3,20 +3,24 @@ import csv
 import datetime
 
 import matplotlib.pyplot as plt
+import numpy as np
+from data.utils import get_largest_std
 
 from django.core.management import setup_environ
 from machinelearning import settings
 setup_environ(settings)
 
-from data.models import Instance, find_tag
+from data.models import *
 
-data = Instance.objects.filter(person='A', sequence=1, tag=find_tag('ankle left'),activity='walking').order_by('datetime')
+data = ContinuousSequence.objects.all()
 
-x = [d.x for d in data]
-y = [d.y for d in data]
-z = [d.z for d in data]
+d = data[0]
 
-plt.plot(x)
-plt.plot(y)
-plt.plot(z)
+fft_real = get_largest_std(get_fft_real(d.instances.all()))
+fft_imag = get_largest_std(get_fft_imag(d.instances.all()))
+
+plt.plot(fft_real)
+plt.plot(fft_imag)
+
 plt.show()
+

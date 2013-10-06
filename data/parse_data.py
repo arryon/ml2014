@@ -2,7 +2,7 @@ import sys
 import csv
 import datetime
 
-sys.path.append('/home/arryon/repos/machinelearning')
+sys.path.append('/home/arryon/repos/ml')
 
 from django.core.management import setup_environ
 from machinelearning import settings
