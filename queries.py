@@ -14,13 +14,15 @@ from data.models import *
 
 data = ContinuousSequence.objects.all()
 
-d = data[0]
+x = np.fromstring(data[0].input_x, sep=',')
+y = np.fromstring(data[0].input_x, sep=',')
+z = np.fromstring(data[0].input_z, sep=',')
 
-fft_real = get_largest_std(get_fft_real(d.instances.all()))
-fft_imag = get_largest_std(get_fft_imag(d.instances.all()))
-
-plt.plot(fft_real)
-plt.plot(fft_imag)
-
+out = get_largest_std([x,y,z])
+plt.plot(out)
 plt.show()
+
+	
+
+
 

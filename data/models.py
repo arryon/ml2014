@@ -30,13 +30,6 @@ class Instance(models.Model):
 
 	z = models.FloatField()
 
-	fftx = models.FloatField(default=0.)
-	ffty = models.FloatField(default=0.)
-	fftz = models.FloatField(default=0.)
-	fftx_imag = models.FloatField(default=0.)
-	ffty_imag = models.FloatField(default=0.)
-	fftz_imag = models.FloatField(default=0.)
-
 	activity = models.CharField(max_length=255)
 
 def find_tag(tag, reverse=False):
@@ -69,3 +62,7 @@ def get_fft_imag(data):
 
 class ContinuousSequence(models.Model):
 	instances = models.ManyToManyField(Instance)
+
+	input_x = models.TextField()
+	input_y = models.TextField()
+	input_z = models.TextField()
