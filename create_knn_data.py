@@ -12,8 +12,7 @@ data = ContinuousSequence.objects.all()
 classes = ['walking', 'falling', 'lying down', 'lying', 'sitting down', 'sitting', 'standing up from lying', 'on all fours', 'sitting on the ground', 'standing up from sitting', 'standing up from sitting on the ground'] 
 
 target = []
-real = []
-imag = []
+database = []
 
 for d in data:
     x = np.fromstring(d.input_x, sep=',')
@@ -23,9 +22,7 @@ for d in data:
     for c in classes:
         if d.instances.all()[0].activity == c:
                 target.append(classes.index(c))
-                real.append(out[:len(out)/2])
-                imag.append(out[len(out)/2:])
+                database.append(out)
 
 np.save('target.npy',target)
-np.save('real.npy', database)
-np.save('imag.npy', imag)
+np.save('database.npy', database)
