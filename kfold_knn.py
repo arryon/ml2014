@@ -13,7 +13,7 @@ def error_with_k(k):
     knn = KNeighborsClassifier(k) 
     #knn.fit(database, target)
 
-    cv = cross_validation.ShuffleSplit(n=len(target), n_iter=10,test_size=0.4, random_state=0)
+    cv = cross_validation.ShuffleSplit(n=len(target), n_iter=10,test_size=0.1, random_state=0)
     scores = cross_validation.cross_val_score(knn, np.array(database), np.array(target), cv=cv)
     return (k, scores.mean(), scores.std() * 2)
 
@@ -29,7 +29,7 @@ for k in range(1,n_k+1):
     stds.append(std)
     print "k={0}, accuracy={1}%, std={2}%".format(k, round(mean*1000)/10,round(std*1000)/10)
 
-print "Max: k={0}, accuracy={1}%, std={2}%".format(means.index(max(means)), max(means), stds[means.index(max(means))])
+print "Max: k={0}, accuracy={1}%, std={2}%".format(means.index(max(means))+1, max(means), stds[means.index(max(means))])
 
 plt.plot(means,label="mean accuracy")
 plt.plot(stds,label="std. deviation")
@@ -37,7 +37,7 @@ plt.title("K-nearest neighbors accuracy")
 plt.xlabel("# of k")
 plt.ylabel("percentage")
 plt.legend(loc=7)
-plt.xticks(range(n_k))
+plt.xticks(range(0,n_k))
 plt.grid()
 plt.show()
 

@@ -32,11 +32,28 @@ for d in data:
 				#variance
 				features.append(np.var(f[1:]))
 				#min
+				#features.append(min(f))
+				#max
+				#features.append(max(f))
+				#rms
+				#features.append(np.sqrt(sum(f[1:]**2)/len(f[1:])))
+			x = np.array([i.x for i in d.instances.all().order_by('datetime')])
+			y = np.array([i.y for i in d.instances.all().order_by('datetime')])
+			z = np.array([i.z for i in d.instances.all().order_by('datetime')])
+			for f in [x,y,z]:
+				#energy = sum of all other values
+				features.append(sum(f[1:]**2)/len(f[1:]))
+				#standard deviation
+				features.append(np.std(f[1:]))
+				#variance
+				features.append(np.var(f[1:]))
+				#min
 				features.append(min(f))
 				#max
 				features.append(max(f))
 				#rms
-				features.append(np.sqrt(sum(f[1:]**2)/len(f[1:])))
+				features.append(np.sqrt(sum(f[1:]**2)/len(f[1:])))				
+
 			target.append(classes.index(c))
 			database.append(features)
 
