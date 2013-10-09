@@ -35,6 +35,10 @@ knn = KNeighborsClassifier(3)
 #Data moet in het formaat elk element in 
 knn.fit(database, target)
 
+element = 12
+result = knn.predict(data[element].input_x)
+print element, 'has label', data[element].instances.all().activity, 'and is classified as', result
+
 
 #De eerste helft is reeel, tweede helft is imaginair.
 #Cluster 11 classes with KNN
