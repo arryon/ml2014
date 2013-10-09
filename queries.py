@@ -12,24 +12,27 @@ setup_environ(settings)
 
 from data.models import *
 
+from sklearn.neighbors import KNeighborsClassifier
+
 #Elk data element is een vector van FFT waarden van coordinaten die hoort bij 1 beweging van 1 individu
 data = ContinuousSequence.objects.all()
 
 classes = ['walking', 'falling', 'lying down', 'lying', 'sitting down', 'sitting', 'standing up from lying', 'on all fours', 'sitting on the ground', 'standing up from sitting', 'standing up from sitting on the ground'] 
 
+print data[0].input_x  
+'''
 target = []
 for d in data:
     for c in classes:
         if d.instances.all()[0].activity == c:
-            try:
                 target.append(classes.index(c))
-            except:            
-                continue
-print len(target)
 
-#knn.fit(database, target)
+target = np.array(target)
 
-'''
+knn = KNeighborsClassifier(3)
+knn.fit(data, target)
+
+
 x = np.fromstring(data[112].input_x, sep=',')
 y = np.fromstring(data[112].input_y, sep=',')
 z = np.fromstring(data[112].input_z, sep=',')
