@@ -19,32 +19,27 @@ data = ContinuousSequence.objects.all()
 
 classes = ['walking', 'falling', 'lying down', 'lying', 'sitting down', 'sitting', 'standing up from lying', 'on all fours', 'sitting on the ground', 'standing up from sitting', 'standing up from sitting on the ground'] 
 
-print data[0].input_x  
-'''
 target = []
+database = []
 for d in data:
+    x = np.fromstring(d.input_x, sep=',')
+    y = np.fromstring(d.input_y, sep=',')
+    z = np.fromstring(d.input_z, sep=',')
+    out = get_largest_std([x,y,z])
     for c in classes:
         if d.instances.all()[0].activity == c:
                 target.append(classes.index(c))
-
-target = np.array(target)
+                database.append(out)
 
 knn = KNeighborsClassifier(3)
-knn.fit(data, target)
+#Data moet in het formaat elk element in 
+knn.fit(database, target)
 
 
-x = np.fromstring(data[112].input_x, sep=',')
-y = np.fromstring(data[112].input_y, sep=',')
-z = np.fromstring(data[112].input_z, sep=',')
-
-#print len(x)
 #De eerste helft is reeel, tweede helft is imaginair.
 #Cluster 11 classes with KNN
 #Train classifer on FFT features from every class
 
 
-
-out = get_largest_std([x,y,z])
 plt.plot(out)
 #plt.show()
-'''
