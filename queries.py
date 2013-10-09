@@ -14,6 +14,13 @@ from data.models import *
 
 from sklearn.neighbors import KNeighborsClassifier
 
+import cPickle
+import os
+import glob
+
+from sklearn import cross_validation
+from sklearn import datasets
+
 #Elk data element is een vector van FFT waarden van coordinaten die hoort bij 1 beweging van 1 individu
 data = ContinuousSequence.objects.all()
 
@@ -31,13 +38,41 @@ for d in data:
                 target.append(classes.index(c))
                 database.append(out)
 
-knn = KNeighborsClassifier(3)
+k = 1 
+knn = KNeighborsClassifier(k)
+'''
+if glob.glob(os.path.join('', 'knn.pkl'):
+    with open('my_dumped_classifier.pkl', 'rb') as fid:
+        knn = cPickle.load(fid)    
+else:
+    knn = KNeighborsClassifier(k)
+
+with open('my_dumped_classifier.pkl', 'wb') as fid:
+            cPickle.dump(knn, fid) 
+'''
+
 #Data moet in het formaat elk element in 
 knn.fit(database, target)
 
-element = 12
-result = knn.predict(data[element].input_x)
-print element, 'has label', data[element].instances.all().activity, 'and is classified as', result
+error = 0
+
+
+cv = cross_validation.ShuffleSplit(n=len(target), n_iter=10,test_size=0.4, random_state=0)
+scores = cross_validation.cross_val_score(knn, np.array(database), np.array(target), cv=cv)
+print("k = %i Accuracy: %0.2f (+/- %0.2f)" % (k, scores.mean(), scores.std() * 2))
+
+
+
+for idx in range(len(data)):
+    result = knn.predict(np.fromstring(data[idx].input_x, sep=','))
+
+    if data[idx].instances.all()[0].activity == classes[result[0]]:
+        error = error + 0 
+    else:
+        error = error + 1
+
+print error
+#error = error + 0 if data[element].instances.all()[0].activity == classes[result[0]] else error = error + 1
 
 
 #De eerste helft is reeel, tweede helft is imaginair.
