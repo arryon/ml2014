@@ -14,48 +14,54 @@ classes = ['walking', 'falling', 'lying down', 'lying', 'sitting down', 'sitting
 target = []
 database = []
 
-for d in data:
-	x = np.fromstring(d.input_x, sep=',')
-	y = np.fromstring(d.input_y, sep=',')
-	z = np.fromstring(d.input_z, sep=',')
+for idx, d in zip(range(len(data)), data):
+    print idx
+    x = np.array([i.x for i in d.instances.all().order_by('tag','datetime','milliseconds')])
+    y = np.array([i.y for i in d.instances.all().order_by('tag','datetime','milliseconds')])
+    z = np.array([i.z for i in d.instances.all().order_by('tag','datetime','milliseconds')])
 
-	for c in classes:
-		if d.instances.all()[0].activity == c:
-			features = []
-			for f in [x,y,z]:
-				#mean feature is DC component
-				features.append(f[0])
-				#energy = sum of all other values
-				features.append(sum(f[1:]**2)/len(f[1:]))
-				#standard deviation
-				features.append(np.std(f[1:]))
-				#variance
-				features.append(np.var(f[1:]))
-				#min
-				#features.append(min(f))
-				#max
-				#features.append(max(f))
-				#rms
-				#features.append(np.sqrt(sum(f[1:]**2)/len(f[1:])))
-			x = np.array([i.x for i in d.instances.all().order_by('datetime')])
-			y = np.array([i.y for i in d.instances.all().order_by('datetime')])
-			z = np.array([i.z for i in d.instances.all().order_by('datetime')])
-			for f in [x,y,z]:
-				#energy = sum of all other values
-				features.append(sum(f[1:]**2)/len(f[1:]))
-				#standard deviation
-				features.append(np.std(f[1:]))
-				#variance
-				features.append(np.var(f[1:]))
-				#min
-				features.append(min(f))
-				#max
-				features.append(max(f))
-				#rms
-				features.append(np.sqrt(sum(f[1:]**2)/len(f[1:])))				
+    fftx = np.fft.rfft(x,40)
+    ffty = np.fft.rfft(y,40)
+    fftz = np.fft.rfft(z,40)
 
-			target.append(classes.index(c))
-			database.append(features)
+    fftx = np.concatenate((np.real(fftx),np.imag(fftx)))
+    ffty = np.concatenate((np.real(ffty),np.imag(ffty)))
+    fftz = np.concatenate((np.real(fftz),np.imag(fftz)))
+
+    for c in classes:
+        if d.instances.all()[0].activity == c:
+            features = []
+            for f in [fftx,ffty,fftz]:
+                #mean feature is DC component
+                features.append(f[0])
+                #energy = sum of all other values
+                features.append(sum(f[1:]**2)/len(f[1:]))
+                #standard deviation
+                features.append(np.std(f[1:]))
+                #variance
+                features.append(np.var(f[1:]))
+                #min
+                #features.append(min(f))
+                #max
+                #features.append(max(f))
+                #rms
+                #features.append(np.sqrt(sum(f[1:]**2)/len(f[1:])))
+            for f in [x,y,z]:
+                #energy = sum of all other values
+                features.append(sum(f[1:]**2)/len(f[1:]))
+                #standard deviation
+                features.append(np.std(f[1:]))
+                #variance
+                features.append(np.var(f[1:]))
+                #min
+                features.append(min(f))
+                #max
+                features.append(max(f))
+                #rms
+                features.append(np.sqrt(sum(f[1:]**2)/len(f[1:])))              
+
+            target.append(classes.index(c))
+            database.append(features)
 
 np.save('target.npy',target)
 np.save('database.npy', database)

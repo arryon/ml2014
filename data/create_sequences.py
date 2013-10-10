@@ -13,7 +13,7 @@ from data.models import Instance, ContinuousSequence
 data = Instance.objects.all()
 
 activity = None
-
+counter = 1
 sequence = ContinuousSequence()
 sequence.save()
 
@@ -26,6 +26,8 @@ for d in data:
 	if not d.activity == activity:
 		sequence.save()
 		sequence = ContinuousSequence()
+		counter += 1
+		print counter
 		activity = d.activity
 		sequence.save()
 

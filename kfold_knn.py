@@ -9,13 +9,16 @@ import numpy as np
 target = np.load('target.npy')
 database = np.load('database.npy')
 
+print target.shape
+print database.shape
+
 def error_with_k(k):
     knn = KNeighborsClassifier(k) 
     #knn.fit(database, target)
 
-    cv = cross_validation.ShuffleSplit(n=len(target), n_iter=10,test_size=0.1, random_state=0)
+    cv = cross_validation.ShuffleSplit(n=len(target), n_iter=10,test_size=0.33, random_state=0)
     scores = cross_validation.cross_val_score(knn, np.array(database), np.array(target), cv=cv)
-    return (k, scores.mean(), scores.std() * 2)
+    return (k, scores.mean(), scores.std())
 
 
 means = []

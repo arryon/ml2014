@@ -8,6 +8,14 @@ class Tags(object):
 		"waist" : "020-000-032-221"
 	}
 
+def find_tag(tag, reverse=False):
+	if reverse:
+		for key in Tags.lookup:
+			if tag == Tags.lookup[key]:
+				return key
+	else:
+		return Tags.lookup[tag]
+
 class Instance(models.Model):
 
 	person = models.CharField(max_length=1)
@@ -24,6 +32,8 @@ class Instance(models.Model):
 
 	datetime = models.DateTimeField()
 
+	milliseconds = models.IntegerField(max_length=3, default=0)
+
 	x = models.FloatField()
 
 	y = models.FloatField()
@@ -32,13 +42,10 @@ class Instance(models.Model):
 
 	activity = models.CharField(max_length=255)
 
-def find_tag(tag, reverse=False):
-	if reverse:
-		for key in Tags.lookup:
-			if tag == Tags.lookup[key]:
-				return key
-	else:
-		return Tags.lookup[tag]
+	def __unicode__(self):
+		return u'{0} with {1} at {2}'.format(self.activity,find_tag(str(self.tag),True),str(self.datetime))
+
+
 
 def get_tag_arrays(data):
 	result = []

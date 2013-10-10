@@ -9,6 +9,7 @@ from machinelearning import settings
 setup_environ(settings)
 
 from data.models import Instance
+counter = 0
 
 with open('dataset.txt') as csv_file:
 	reader = csv.reader(csv_file, delimiter=',')
@@ -25,6 +26,8 @@ with open('dataset.txt') as csv_file:
 
 		#convert time to python datetime
 		t = row[3]
-		instance.datetime = datetime.datetime(int(t[6:10]),int(t[3:5]),int(t[0:2]),int(t[11:13]),int(t[14:16]),int(t[17:19]),int(t[20:]+'00'))
+		dt = datetime.datetime(int(t[6:10]),int(t[3:5]),int(t[0:2]),int(t[11:13]),int(t[14:16]),int(t[17:19]),int(t[20:]+'00'))
+		instance.datetime = dt
+		instance.milliseconds = dt.time().microsecond / 100
 		instance.save()
 
