@@ -13,6 +13,7 @@ setup_environ(settings)
 from data.models import *
 
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn import svm
 
 import cPickle
 import os
@@ -26,6 +27,18 @@ data = ContinuousSequence.objects.all()
 
 classes = ['walking', 'falling', 'lying down', 'lying', 'sitting down', 'sitting', 'standing up from lying', 'on all fours', 'sitting on the ground', 'standing up from sitting', 'standing up from sitting on the ground'] 
 
+x = np.fromstring(data[2].input_x, sep=',')
+y = np.fromstring(data[2].input_y, sep=',')
+z = np.fromstring(data[2].input_z, sep=',')
+out = get_largest_std([x,y,z])
+out_first_half = out[0:len(out)/2]
+out_second_half = out[len(out)/2:]
+print len(out)
+print len(out_first_half)
+print len(out_second_half)
+
+
+
 target = []
 database = []
 for d in data:
@@ -36,10 +49,11 @@ for d in data:
     for c in classes:
         if d.instances.all()[0].activity == c:
                 target.append(classes.index(c))
-                database.append(out)
+                database.append(out[len(out)/2:])
 
 k = 1 
-knn = KNeighborsClassifier(k)
+#knn = KNeighborsClassifier(k)
+clf = svm.SVC()
 '''
 if glob.glob(os.path.join('', 'knn.pkl'):
     with open('my_dumped_classifier.pkl', 'rb') as fid:
@@ -52,7 +66,8 @@ with open('my_dumped_classifier.pkl', 'wb') as fid:
 '''
 
 #Data moet in het formaat elk element in 
-knn.fit(database, target)
+#knn.fit(database, target)
+clf.fit(X, Y)
 
 error = 0
 
