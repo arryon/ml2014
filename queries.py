@@ -36,7 +36,7 @@ out_second_half = out[len(out)/2:]
 
 target = []
 database = []
-'''
+
 for d in data:
     x = np.fromstring(d.input_x, sep=',')
     y = np.fromstring(d.input_y, sep=',')
@@ -46,14 +46,15 @@ for d in data:
         if d.instances.all()[0].activity == c:
                 target.append(classes.index(c))
                 database.append(out)
-'''
 
+'''
 target = np.load('target.npy')
 database = np.load('database.npy')
+'''
 
 k = 1 
 #knn = KNeighborsClassifier(k)
-clf = svm.SVC(kernel='linear')
+clf = svm.SVC(kernel='rbf')
 '''
 if glob.glob(os.path.join('', 'knn.pkl'):
     with open('my_dumped_classifier.pkl', 'rb') as fid:
